@@ -9,13 +9,11 @@ import (
 	enTranslations "github.com/go-playground/validator/v10/translations/en"
 )
 
-type Validation struct{}
-
 var (
 	validate *validator.Validate
 )
 
-func (v *Validation) setValidation(value interface{}) []error {
+func SetupValidation(value interface{}) []error {
 	validate = validator.New()
 
 	english := en.New()
@@ -25,12 +23,12 @@ func (v *Validation) setValidation(value interface{}) []error {
 	_ = enTranslations.RegisterDefaultTranslations(validate, trans)
 
 	err := validate.Struct(value)
-	errs := v.translateError(err, trans)
+	errs := TranslateError(err, trans)
 
 	return errs
 }
 
-func (v *Validation) translateError(err error, trans ut.Translator) (errs []error) {
+func TranslateError(err error, trans ut.Translator) (errs []error) {
 	if err == nil {
 		return nil
 	}
